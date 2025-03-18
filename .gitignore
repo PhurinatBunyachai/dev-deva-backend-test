@@ -30,6 +30,7 @@ logs/
 # Prisma
 prisma/.env
 .prisma/
+prisma/migrations
 
 # Testing
 coverage/
