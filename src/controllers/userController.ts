@@ -7,7 +7,16 @@ const prisma = new PrismaClient();
 export class UserController {
   public async getAllUsers(req: Request, res: Response): Promise<void> {
     try {
-      const users = await prisma.users.findMany();
+      const users = await prisma.users.findMany({
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+          gender: true,
+          birthDate: true,
+          image: true,
+        },
+      });
       res.json({ message: 'Get all users', users });
     } catch (error) {
       res.status(500).json({ message: 'Error fetching users', error });
@@ -17,21 +26,29 @@ export class UserController {
   public async getUserByNameSurname(req: Request, res: Response): Promise<void> {
     try {
       const { nameSurname } = req.params;
-      const [firstName, lastName] = nameSurname.split('-');
-      
-      const user = await prisma.users.findFirst({
+      const users = await prisma.users.findMany({
         where: {
-          firstName,
-          lastName
+          OR: [
+            {
+              firstName: {
+                contains: nameSurname
+              }
+            },
+            {
+              lastName: {
+                contains: nameSurname
+              }
+            }
+          ]
         }
       });
       
-      if (!user) {
+      if (!users) {
         res.status(404).json({ message: 'User not found' });
         return;
       }
       
-      res.json({ message: `Get user with name and surname: ${nameSurname}`, user });
+      res.json({ message: `Get user with name and surname: ${nameSurname}`, users });
     } catch (error) {
       res.status(500).json({ message: 'Error fetching user', error });
     }
@@ -41,7 +58,14 @@ export class UserController {
     try {
       const userData = req.body;
       const newUser = await prisma.users.create({
-        data: userData
+        data: {
+          firstName: userData.first_name,
+          lastName: userData.last_name,
+          gender: userData.gender,
+          birthDate: new Date(userData.birthday),
+          image: userData.profile_picture,
+
+        }
       });
       res.status(201).json({ message: 'User created successfully', user: newUser });
     } catch (error) {
