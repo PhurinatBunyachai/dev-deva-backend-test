@@ -64,7 +64,6 @@ export class UserController {
           gender: userData.gender,
           birthDate: new Date(userData.birthday),
           image: userData.profile_picture,
-
         }
       });
       res.status(201).json({ message: 'User created successfully', user: newUser });
@@ -80,7 +79,13 @@ export class UserController {
       
       const user = await prisma.users.update({
         where: { id: parseInt(id) },
-        data: userData
+        data: {
+          firstName: userData.firstName,
+          lastName: userData.lastName,
+          gender: userData.gender,
+          birthDate: new Date(userData.birthDate),
+          image: userData.image,
+        }
       });
       
       res.json({ message: `User with ID ${id} updated successfully`, user });
