@@ -30,8 +30,8 @@ jobs:
     - name: Deploy to EB
       uses: einaregilsson/beanstalk-deploy@v21
       with:
-        aws_access_key: 'AKIAXQ6DA46D56Q6ZZWM'
-        aws_secret_key: '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'
+        aws_access_key: 'AKIAXQ6DA46D56Q6ZZWM' #${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws_secret_key: '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' #${{ secrets.AWS_SECRET_ACCESS_KEY }}
         application_name: dev-deva-backend
         environment_name: Dev-deva-backend-env
         version_label: ${{ github.sha }}
