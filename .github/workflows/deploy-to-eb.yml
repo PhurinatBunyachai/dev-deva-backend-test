@@ -31,7 +31,7 @@ jobs:
       run: zip -r deploy.zip . -x "node_modules/*" "*.git*"
       
     - name: Check ENV
-      run: echo "AWS_REGION: ${{ secrets }}"
+      run: echo ${{ secrets }}
         
 
       uses: einaregilsson/beanstalk-deploy@v22
