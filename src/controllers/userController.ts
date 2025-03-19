@@ -1,22 +1,14 @@
 
 import { Request, Response } from 'express';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import connection from '../config/database';
 
 export class UserController {
   public async getAllUsers(req: Request, res: Response): Promise<void> {
     try {
-      const users = await prisma.users.findMany({
-        select: {
-          id: true,
-          firstName: true,
-          lastName: true,
-          gender: true,
-          birthDate: true,
-          image: true,
-        },
-      });
+      const [users] = await connection.query(
+        `SELECT id, firstName, lastName, gender, birthDate, image 
+         FROM users`
+      );
       res.json({ message: 'Get all users', users });
     } catch (error) {
       res.status(500).json({ message: 'Error fetching users', error });
@@ -26,25 +18,14 @@ export class UserController {
   public async getUserByNameSurname(req: Request, res: Response): Promise<void> {
     try {
       const { nameSurname } = req.params;
-      const users = await prisma.users.findMany({
-        where: {
-          OR: [
-            {
-              firstName: {
-                contains: nameSurname
-              }
-            },
-            {
-              lastName: {
-                contains: nameSurname
-              }
-            }
-          ]
-        }
-      });
+      const [users] = await connection.query(
+        `SELECT * FROM users 
+         WHERE firstName LIKE ? OR lastName LIKE ?`,
+        [`%${nameSurname}%`, `%${nameSurname}%`]
+      );
       
-      if (!users) {
-        res.status(404).json({ message: 'User not found' });
+      if (!users || (Array.isArray(users) && users.length === 0)) {
+        res.status(200).json({ message: 'User not found' ,users:  []});
         return;
       }
       
@@ -57,16 +38,19 @@ export class UserController {
   public async createUser(req: Request, res: Response): Promise<void> {
     try {
       const userData = req.body;
-      const newUser = await prisma.users.create({
-        data: {
-          firstName: userData.first_name,
-          lastName: userData.last_name,
-          gender: userData.gender,
-          birthDate: new Date(userData.birthday),
-          image: userData.profile_picture,
-        }
-      });
-      res.status(201).json({ message: 'User created successfully', user: newUser });
+      const [result] = await connection.query(
+        `INSERT INTO users (firstName, lastName, gender, birthDate, image) 
+         VALUES (?, ?, ?, ?, ?)`,
+        [
+          userData.first_name,
+          userData.last_name,
+          userData.gender,
+          new Date(userData.birthday),
+          userData.profile_picture
+        ]
+      );
+      
+      res.status(201).json({ message: 'User created successfully' });
     } catch (error) {
       res.status(500).json({ message: 'Error creating user', error });
     }
@@ -77,18 +61,21 @@ export class UserController {
       const { id } = req.params;
       const userData = req.body;
       
-      const user = await prisma.users.update({
-        where: { id: parseInt(id) },
-        data: {
-          firstName: userData.firstName,
-          lastName: userData.lastName,
-          gender: userData.gender,
-          birthDate: new Date(userData.birthDate),
-          image: userData.image,
-        }
-      });
+      await connection.query(
+        `UPDATE users 
+         SET firstName = ?, lastName = ?, gender = ?, birthDate = ?, image = ? 
+         WHERE id = ?`,
+        [
+          userData.firstName,
+          userData.lastName,
+          userData.gender,
+          new Date(userData.birthDate),
+          userData.image,
+          parseInt(id)
+        ]
+      );
       
-      res.json({ message: `User with ID ${id} updated successfully`, user });
+      res.json({ message: `User with ID ${id} updated successfully` });
     } catch (error) {
       res.status(500).json({ message: 'Error updating user', error });
     }
@@ -98,9 +85,10 @@ export class UserController {
     try {
       const { id } = req.params;
       
-      await prisma.users.delete({
-        where: { id: parseInt(id) }
-      });
+      await connection.query(
+        `DELETE FROM users WHERE id = ?`,
+        [parseInt(id)]
+      );
       
       res.json({ message: `User with ID ${id} deleted successfully` });
     } catch (error) {

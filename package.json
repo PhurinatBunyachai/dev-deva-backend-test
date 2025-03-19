@@ -1,10 +1,10 @@
 {
   "dependencies": {
-    "@prisma/client": "^6.5.0",
     "@types/express": "^5.0.0",
     "@types/node": "^22.13.10",
     "cors": "^2.8.5",
     "express": "^4.21.2",
+    "mysql2": "^3.6.5",
     "typescript": "^5.8.2"
   },
   "scripts": {
@@ -14,8 +14,8 @@
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
+    "@types/mysql2": "^2.3.0",
     "nodemon": "^3.1.9",
-    "prisma": "^6.5.0",
     "ts-node": "^10.9.2"
   }
 }
