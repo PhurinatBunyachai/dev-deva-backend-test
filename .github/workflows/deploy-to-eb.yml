@@ -29,9 +29,13 @@ jobs:
 
     - name: Generate deployment package
       run: zip -r deploy.zip . -x "node_modules/*" "*.git*"
-      
+
     - name: Check ENV
-    - echo: ${{ secrets }}
+      run: |
+        echo "Checking environment variables..."
+        echo ${{ secrets.AWS_ACCESS_KEY_ID }}
+        echo ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        echo ${{ secrets }}
         
 
       uses: einaregilsson/beanstalk-deploy@v22
