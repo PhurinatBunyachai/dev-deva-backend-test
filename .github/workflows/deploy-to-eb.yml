@@ -37,7 +37,7 @@ jobs:
         echo ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         echo ${{ secrets }}
         
-
+    - name: Deploy to Elastic Beanstalk
       uses: einaregilsson/beanstalk-deploy@v22
       with:
         aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
