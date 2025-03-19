@@ -33,9 +33,9 @@ jobs:
     - name: Check ENV
       run: |
         echo "Checking environment variables..."
-        echo ${{ secrets.AWS_ACCESS_KEY_ID }}
-        echo ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        echo ${{ secrets }}
+        echo ${{ secrets.Production.AWS_ACCESS_KEY_ID }}
+        echo ${{ secrets.Production.AWS_SECRET_ACCESS_KEY }}
+        echo ${{ secrets.Production }}
         
     - name: Deploy to Elastic Beanstalk
       uses: einaregilsson/beanstalk-deploy@v22
