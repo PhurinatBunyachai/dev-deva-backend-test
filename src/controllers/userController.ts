@@ -29,7 +29,7 @@ export class UserController {
         return;
       }
       
-      res.json({ message: `Get user with name and surname: ${nameSurname}`, users });
+      res.json({ message: `Get user by search: ${nameSurname}`, users });
     } catch (error) {
       res.status(500).json({ message: 'Error fetching user', error });
     }
