@@ -1,11 +1,11 @@
 
 import { Request, Response } from 'express';
-import connection from '../config/database';
+import db from '../config/database';
 
 export class UserController {
   public async getAllUsers(req: Request, res: Response): Promise<void> {
     try {
-      const [users] = await connection.query(
+      const [users] = await db.query(
         `SELECT id, firstName, lastName, gender, birthDate, image 
          FROM users`
       );
@@ -18,7 +18,7 @@ export class UserController {
   public async getUserByNameSurname(req: Request, res: Response): Promise<void> {
     try {
       const { nameSurname } = req.params;
-      const [users] = await connection.query(
+      const [users] = await db.query(
         `SELECT * FROM users 
          WHERE firstName LIKE ? OR lastName LIKE ?`,
         [`%${nameSurname}%`, `%${nameSurname}%`]
@@ -38,7 +38,7 @@ export class UserController {
   public async createUser(req: Request, res: Response): Promise<void> {
     try {
       const userData = req.body;
-      const [result] = await connection.query(
+      const [result] = await db.query(
         `INSERT INTO users (firstName, lastName, gender, birthDate, image) 
          VALUES (?, ?, ?, ?, ?)`,
         [
@@ -61,7 +61,7 @@ export class UserController {
       const { id } = req.params;
       const userData = req.body;
       
-      await connection.query(
+      await db.query(
         `UPDATE users 
          SET firstName = ?, lastName = ?, gender = ?, birthDate = ?, image = ? 
          WHERE id = ?`,
@@ -85,7 +85,7 @@ export class UserController {
     try {
       const { id } = req.params;
       
-      await connection.query(
+      await db.query(
         `DELETE FROM users WHERE id = ?`,
         [parseInt(id)]
       );
