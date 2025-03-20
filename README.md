@@ -30,15 +30,18 @@
  http://localhost:3000/migrate
 ```
 
-## API Route
+## API Route 
 - GET api/users
     - http://localhost:3000/api/users
+    $~$
 - GET api/users/:nameSurname
     - http://localhost:3000/api/users/:nameSurname
+    $~$
 - POST api/users
     - http://localhost:3000/api/users
+    $~$
 - PUT api/users/:id
     - http://localhost:3000/api/users/:id
+    $~$
 - DELETE api/users/:id
     - http://localhost:3000/api/users/:id
-
