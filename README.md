@@ -30,7 +30,9 @@
  http://localhost:3000/migrate
 ```
 
-## API Route 
+## API Document 
+[Postman Json Here](https://github.com/PhurinatBunyachai/dev-deva-backend-test/blob/main/users-api.postman_collection.json)
+
 - GET api/users
     - http://localhost:3000/api/users
     $~$
